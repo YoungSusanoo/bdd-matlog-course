@@ -14,9 +14,18 @@ const (
 
 func main() {
 	bdd, err := rudd.New(6, rudd.Nodesize(10000), rudd.Cachesize(5000))
-	v := make([][][]rudd.BDD, objects)
-	v[0] = make([][]rudd.BDD, props)
-	v[0][0] = make([]rudd.BDD, propsBits)
-
-	fmt.Print(err)
+	if err != nil {
+		fmt.Println(err)
+	}
+	
+	vars := make([][][]rudd.Node, objects)
+	for i := range objects {
+		vars[i] = make([][]rudd.Node, props)
+		for j := range props {
+			vars[i][j] = make([]rudd.Node, propsBits)
+			for k := range propsBits {
+				vars[i][j][k] = bdd.Ithvar(objects*i + props*j + k)
+			}
+		}
+	}
 }
